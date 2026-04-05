@@ -4,42 +4,15 @@ import contactRoutes from './routes/contactRoutes.js';
 import portfolioRoutes from './routes/portfolioRoutes.js';
 
 const app = express();
-const configuredOrigins = (process.env.CORS_ORIGIN || '')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-const defaultOrigins = ['http://localhost:5173', 'http://localhost:5174'];
-const allowedOrigins = [...new Set([...defaultOrigins, ...configuredOrigins])];
-
-function isAllowedOrigin(origin) {
-  if (!origin) {
-    return true;
-  }
-
-  if (allowedOrigins.includes(origin)) {
-    return true;
-  }
-
-  try {
-    const { hostname } = new URL(origin);
-    return hostname.endsWith('.onrender.com');
-  } catch {
-    return false;
-  }
-}
 
 app.use(
   cors({
-    origin(origin, callback) {
-      if (isAllowedOrigin(origin)) {
-        callback(null, true);
-        return;
-      }
-
-      callback(null, false);
-    },
+    origin: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
+app.options('*', cors());
 app.use(express.json());
 
 app.get('/', (_request, response) => {
