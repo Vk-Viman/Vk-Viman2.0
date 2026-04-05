@@ -7,7 +7,8 @@ export default function Contact() {
   const ref = useReveal();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState(null); // null | 'sending' | 'sent' | 'error'
-  const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const isRenderHost = typeof window !== 'undefined' && window.location.hostname.endsWith('.onrender.com');
+  const apiBaseUrl = import.meta.env.VITE_API_URL || (isRenderHost ? 'https://vk-viman2-0.onrender.com' : 'http://localhost:5000');
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 

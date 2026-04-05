@@ -11,15 +11,32 @@ const configuredOrigins = (process.env.CORS_ORIGIN || '')
 const defaultOrigins = ['http://localhost:5173', 'http://localhost:5174'];
 const allowedOrigins = [...new Set([...defaultOrigins, ...configuredOrigins])];
 
+function isAllowedOrigin(origin) {
+  if (!origin) {
+    return true;
+  }
+
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  try {
+    const { hostname } = new URL(origin);
+    return hostname.endsWith('.onrender.com');
+  } catch {
+    return false;
+  }
+}
+
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true);
         return;
       }
 
-      callback(new Error('CORS origin not allowed'));
+      callback(null, false);
     },
   }),
 );
