@@ -25,8 +25,29 @@ app.use(
 );
 app.use(express.json());
 
+app.get('/', (_request, response) => {
+  response.json({
+    service: 'portfolio-backend',
+    ok: true,
+    endpoints: ['/api/health', '/api/portfolio', '/api/contact (POST)'],
+  });
+});
+
+app.get('/api', (_request, response) => {
+  response.json({
+    ok: true,
+    endpoints: ['/api/health', '/api/portfolio', '/api/contact (POST)'],
+  });
+});
+
 app.get('/api/health', (_request, response) => {
   response.json({ ok: true });
+});
+
+app.get('/api/contact', (_request, response) => {
+  response.status(405).json({
+    message: 'Method Not Allowed. Use POST /api/contact with JSON body.',
+  });
 });
 
 app.use('/api/portfolio', portfolioRoutes);
